@@ -1,6 +1,7 @@
-fastapi
+fastapi==0.111.0
 httpx
 google-auth
 google-auth-oauthlib
 google-api-python-client
 python-dotenv
+uvicorn

@@ -1,5 +1,9 @@
 
-# YouTube Subscriptions Monitor
+
+# YouTube Subscriptions Monitor ![version](https://img.shields.io/badge/version-1.0.2-blue)
+
+
+**Current Version:** 1.0.2
 
 Monitor your YouTube subscriptions for changes and receive webhook notifications when channels are added or removed.
 

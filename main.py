@@ -24,7 +24,10 @@ SCOPES = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 print("CLIENT_ID:", CLIENT_ID)
 
-app = FastAPI()
+app = FastAPI(
+    title="YouTube Subscriptions Monitor",
+    version="1.0.2"
+)
 
 @app.on_event("startup")
 async def start_monitor():
@@ -32,19 +35,27 @@ async def start_monitor():
 
 async def monitor_subscriptions():
     prev_subs = None
+    prev_subs_dict = {}
     if os.path.exists(SUBSCRIPTIONS_FILE):
         with open(SUBSCRIPTIONS_FILE) as f:
             prev_subs = json.load(f)
+            prev_subs_dict = {s["channelId"]: s for s in prev_subs}
     while True:
         try:
             current_subs = fetch_subscriptions()
+            current_subs_dict = {s["channelId"]: s for s in current_subs}
             if prev_subs is not None:
-                added = [s for s in current_subs if s not in prev_subs]
-                removed = [s for s in prev_subs if s not in current_subs]
+                prev_ids = set(prev_subs_dict.keys())
+                curr_ids = set(current_subs_dict.keys())
+                added_ids = curr_ids - prev_ids
+                removed_ids = prev_ids - curr_ids
+                added = [current_subs_dict[cid] for cid in added_ids]
+                removed = [prev_subs_dict[cid] for cid in removed_ids]
                 if added or removed:
                     await notify_webhook(added, removed)
             save_subscriptions(current_subs)
             prev_subs = current_subs
+            prev_subs_dict = current_subs_dict
         except Exception as e:
             print(f"Error monitoring subscriptions: {e}")
         await asyncio.sleep(POLL_INTERVAL)
