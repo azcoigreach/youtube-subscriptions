@@ -79,6 +79,19 @@ def get_subscriptions():
         }
     except Exception as e:
         return {"error": str(e)}
+    
+# Endpoint to send a test message to the webhook
+@app.post("/test-webhook")
+async def test_webhook():
+    if not WEBHOOK_URL:
+        return {"error": "No webhook URL set."}
+    data = {"content": "This is a test notification from the YouTube Subscriptions Monitor."}
+    try:
+        async with httpx.AsyncClient() as client:
+            resp = await client.post(WEBHOOK_URL, json=data)
+        return {"status": "Test message sent.", "webhook_response_status": resp.status_code}
+    except Exception as e:
+        return {"error": str(e)}
 
 # --- OAuth2 Endpoints ---
 @app.get("/authorize")
@@ -99,19 +112,6 @@ def authorize():
     auth_url, _ = flow.authorization_url(prompt='consent', access_type='offline', include_granted_scopes='true')
     return RedirectResponse(auth_url)
 
-# Endpoint to send a test message to the webhook
-@app.post("/test-webhook")
-async def test_webhook():
-    if not WEBHOOK_URL:
-        return {"error": "No webhook URL set."}
-    data = {"content": "This is a test notification from the YouTube Subscriptions Monitor."}
-    try:
-        async with httpx.AsyncClient() as client:
-            resp = await client.post(WEBHOOK_URL, json=data)
-        return {"status": "Test message sent.", "webhook_response_status": resp.status_code}
-    except Exception as e:
-        return {"error": str(e)}
-    
 @app.get("/oauth2callback")
 def oauth2callback(request: Request):
     code = request.query_params.get("code")

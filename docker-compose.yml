@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  youtube-subscriptions:
+    build: .
+    container_name: youtube-subscriptions
+    env_file:
+      - .env
+    ports:
+      - "${FASTAPI_PORT:-8088}:${FASTAPI_PORT:-8088}"
+    restart: unless-stopped
+    volumes:
+      - ./subscriptions.json:/app/subscriptions.json
+      - ./token.json:/app/token.json
