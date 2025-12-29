@@ -1,3 +1,4 @@
+
 import os
 import json
 import asyncio
@@ -9,13 +10,16 @@ from subscriptions import fetch_subscriptions, save_subscriptions, SUBSCRIPTIONS
 from google_auth_oauthlib.flow import Flow
 from google.oauth2.credentials import Credentials
 
+# To run the app on the port specified in .env, use:
+#   uvicorn main:app --reload --port $(grep FASTAPI_PORT .env | cut -d '=' -f2)
+
 load_dotenv()
 
 WEBHOOK_URL = os.getenv("WEBHOOK_URL")
 POLL_INTERVAL = int(os.getenv("POLL_INTERVAL", 300))  # seconds, default 5 min
 CLIENT_ID = os.getenv("YOUTUBE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("YOUTUBE_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("YOUTUBE_REDIRECT_URI", "http://localhost:8088/oauth2callback")
+REDIRECT_URI = os.getenv("YOUTUBE_REDIRECT_URI")
 SCOPES = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 print("CLIENT_ID:", CLIENT_ID)

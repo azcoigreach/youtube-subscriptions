@@ -12,7 +12,7 @@ app = FastAPI()
 
 CLIENT_ID = os.getenv("YOUTUBE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("YOUTUBE_CLIENT_SECRET")
-REDIRECT_URI = os.getenv("YOUTUBE_REDIRECT_URI", "http://localhost:8088/oauth2callback")
+REDIRECT_URI = os.getenv("YOUTUBE_REDIRECT_URI")
 SCOPES = ["https://www.googleapis.com/auth/youtube.readonly"]
 
 @app.get("/")
