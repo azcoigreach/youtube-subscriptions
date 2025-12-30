@@ -1,3 +1,7 @@
+# [1.0.3] - 2025-12-29
+### Improved
+- Enhanced logging for subscription consistency and debugging.
+- Only trigger notifications if the sets of channel IDs are different, not just the lists (eliminates false positives).
 # Changelog
 
 All notable changes to this project will be documented in this file.
